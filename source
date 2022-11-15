@@ -36,6 +36,8 @@ getgenv().autoticket = true
 getgenv().Ignotscraft = true
 getgenv().Infinitycastle = true
 getgenv().Nextroom = true
+getgenv().Autoleave = true
+
 
 
 
@@ -97,8 +99,33 @@ end
 function Autonextroom()
     spawn(function()
         while getgenv().Nextroom == true do
+            wait(800)
             game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
             wait(800)
+        end
+    end)
+end
+
+-- Autoleave Functions
+
+function Autoleavegame()
+    spawn(function()
+        while getgenv().Autoleave == true do
+            coroutine.resume(coroutine.create(function()
+                local GameFinished = game:GetService("Workspace"):WaitForChild("_DATA"):WaitForChild("GameFinished")
+                GameFinished:GetPropertyChangedSignal("Value"):Connect(function()
+                print("Changed", GameFinished.Value == true)
+                if GameFinished.Value == true then
+                    repeat task.wait() until  game:GetService("Players").LocalPlayer.PlayerGui.ResultsUI.Enabled == true
+                    task.wait()
+                    pcall(function() webhook() end)
+                    print("next")
+                    task.wait(2)
+                    game:GetService("ReplicatedStorage").endpoints.client_to_server.teleport_back_to_lobby:InvokeServer()
+                end
+                end)
+            end))
+            wait(2)
         end
     end)
 end
@@ -193,6 +220,17 @@ local Toggle = InfCastle:CreateToggle({
     end
 })
 
+-- Auto Leave
+
+local Toggle = InfCastle:CreateToggle({
+    Name = " Auto Leave ",
+    CurrentValue = false,
+    Flag = "Auto leave", 
+    Callback = function(Value)
+        getgenv().Autoleave = Value
+        Autoleavegame()
+    end
+})
 
 
 
