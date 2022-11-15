@@ -1,0 +1,128 @@
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+local Window = Rayfield:CreateWindow({
+	Name = "CyberHub - Anime Adventure",
+	LoadingTitle = "CyberHub",
+	LoadingSubtitle = "by iiTaha",
+	ConfigurationSaving = {
+		Enabled = true,
+		FolderName = nil, -- Create a custom folder for your hub/game
+		FileName = "CyberHub"
+	},
+        Discord = {
+        	Enabled = false,
+        	Invite = "sirius", -- The Discord invite code, do not include discord.gg/
+        	RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+        },
+	KeySystem = false, -- Set this to true to use our key system
+	KeySettings = {
+		Title = "Sirius Hub",
+		Subtitle = "Key System",
+		Note = "Join the discord (discord.gg/sirius)",
+		FileName = "SiriusKey",
+		SaveKey = true,
+		GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+		Key = "Hello"
+	}
+})
+
+
+
+
+
+-- Values
+
+getgenv().Westraid = true
+getgenv().autoticket = true
+getgenv().Ignotscraft = true
+
+
+
+-- Raid Functions
+
+function Autowestraid()
+    spawn(function()
+        while getgenv().Westraid == true do 
+            local args = {
+                [1] = "_lobbytemplate215"
+            }
+            game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer(unpack(args))
+        end
+    end)
+end
+
+-- Craft Functions
+
+function Autoignotscraft()
+    spawn(function()
+        while getgenv().Ignotscraft == true do
+            game:GetService("ReplicatedStorage").endpoints.client_to_server.craft_item:InvokeServer("ingots_steel","craft_relics_ui")
+            wait(0.5)
+        end
+    end)
+end
+
+
+-- Taps
+
+local RaidTab = Window:CreateTab("Auto Raid", 4483362458) -- Title, Image
+
+local CraftTab = Window:CreateTab("Auto Craft", 4483362458) -- Title, Image
+
+
+
+
+
+
+-- Sections 
+
+local Section = RaidTab:CreateSection("AutoRaids")
+
+local Section = CraftTab:CreateSection("AutoCraft")
+
+
+
+-- Buttons
+
+local Button = RaidTab:CreateButton({
+	Name = "Teleport To Lobby",
+	Callback = function()
+        placeid = 8304191830  --change this to the place id you want
+        tp = game:GetService('TeleportService')
+        
+        for i,v in pairs (game.Players:GetChildren()) do
+            tp:Teleport(placeid, v)
+        end        
+	end,
+})
+
+-- Raid Toggles
+
+local Toggle = RaidTab:CreateToggle({
+    Name = "Auto Raid [ All Raids ]",
+    CurrentValue = false,
+    Flag = "Auto WestCity", 
+    Callback = function(Value)
+        getgenv().Westraid = Value
+        Autowestraid()
+    end
+})
+
+
+-- Craft Toggles
+
+local Toggle = CraftTab:CreateToggle({
+    Name = "Craft Ignots (steel)  ",
+    CurrentValue = false,
+    Flag = "Auto Craft1", 
+    Callback = function(Value)
+        getgenv().Ignotscraft = Value
+        Autoignotscraft()
+    end
+})
+
+-- Buy Toggles
+
+
+
+
+Rayfield:LoadConfiguration()
