@@ -34,6 +34,10 @@ local Window = Rayfield:CreateWindow({
 getgenv().Westraid = true
 getgenv().autoticket = true
 getgenv().Ignotscraft = true
+getgenv().Infinitycastle = true
+getgenv().Nextroom = true
+
+
 
 
 
@@ -61,12 +65,54 @@ function Autoignotscraft()
     end)
 end
 
+-- InfCastle Functions
+
+function Autoinfcastle()
+    spawn(function()
+        while getgenv().Infinitycastle == true do
+            getgenv().Infinitycastle = 0
+
+            for i, v in pairs(game:GetService("Players")[game.Players.LocalPlayer.Name].PlayerGui.InfiniteTowerUI.LevelSelect.InfoFrame.LevelButtons:GetChildren()) do
+                if v.Name == "FloorButton" then
+                    if v.clear.Visible == false and v.Locked.Visible == false then
+                        local room = string.split(v.Main.text.Text, " ")
+                        getgenv().Infinitycastle = tonumber(room[2])
+                    end
+                end
+            end
+            
+            task.wait(1.5)
+            local args = {
+                [1] = getgenv().Infinitycastle
+            }
+            
+            game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower:InvokeServer(unpack(args))
+            task.wait(6)
+        end
+    end)
+end
+
+-- auto next room
+
+function Autonextroom()
+    spawn(function()
+        while getgenv().Nextroom == true do
+            game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+            wait(800)
+        end
+    end)
+end
+
 
 -- Taps
 
 local RaidTab = Window:CreateTab("Auto Raid", 4483362458) -- Title, Image
 
 local CraftTab = Window:CreateTab("Auto Craft", 4483362458) -- Title, Image
+
+local InfCastle = Window:CreateTab("Inf Castle", 4483362458) -- Title, Image
+
+
 
 
 
@@ -78,6 +124,9 @@ local CraftTab = Window:CreateTab("Auto Craft", 4483362458) -- Title, Image
 local Section = RaidTab:CreateSection("AutoRaids")
 
 local Section = CraftTab:CreateSection("AutoCraft")
+
+local Section = InfCastle:CreateSection("AutoInfCastle")
+
 
 
 
@@ -119,6 +168,34 @@ local Toggle = CraftTab:CreateToggle({
         Autoignotscraft()
     end
 })
+
+-- InfCastle Toggles
+
+local Toggle = InfCastle:CreateToggle({
+    Name = " Auto Inf Castle ",
+    CurrentValue = false,
+    Flag = "Inf Castle", 
+    Callback = function(Value)
+        getgenv().InfCastle = Value
+        Autoinfcastle()
+    end
+})
+
+-- Auto Next Room
+
+local Toggle = InfCastle:CreateToggle({
+    Name = " Auto Next Room ",
+    CurrentValue = false,
+    Flag = "Next Room", 
+    Callback = function(Value)
+        getgenv().Nextroom = Value
+        Autonextroom()
+    end
+})
+
+
+
+
 
 -- Buy Toggles
 
