@@ -161,8 +161,9 @@ function Autonextroom()
     spawn(function()
         while getgenv().Nextroom == true do
             local GameFinished = game:GetService("Workspace"):WaitForChild("_DATA"):WaitForChild("GameFinished")
-            if GameFinished.Value = true then
+            if GameFinished.Value == true then
             game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+            end
         end
     end)
 end
