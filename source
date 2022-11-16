@@ -68,12 +68,23 @@ function Autowestraid()
     end)
 end
 
--- Craft Functions
+-- parade Functions
 
-function Autoignotscraft()
+function Autojoinparade()
     spawn(function()
         while getgenv().Autoparade == true do
             game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer("_lobbytemplate_event28",{["selected_key"] = "key_jjk_map"})
+        end
+    end)
+end
+
+-- craft Functions
+
+function Autoignotscraft()
+    spawn(function()
+        while getgenv().Ignotscraft == true do
+            game:GetService("ReplicatedStorage").endpoints.client_to_server.craft_item:InvokeServer("ingots_steel","craft_relics_ui")
+            wait(0.5)
         end
     end)
 end
@@ -83,7 +94,7 @@ end
 function Autouseerwin()
     spawn(function()
         while getgenv().Autoerwin == true do
-            while wait() do
+            while wait(5) do
                 game:GetService("ReplicatedStorage").endpoints.client_to_server.use_active_attack:InvokeServer(workspace._UNITS.erwin)
              end
         end
@@ -95,7 +106,7 @@ end
 function Autoskillgojo()
     spawn(function()
         while getgenv().Autogojo == true do
-            while wait() do
+            while wait(5) do
                 game:GetService("ReplicatedStorage").endpoints.client_to_server.use_active_attack:InvokeServer(workspace._UNITS.gojo_evolved)
              end
         end
@@ -135,26 +146,29 @@ end
 -- InfCastle Functions
 
 function Autoinfcastle()
-    spawn(function()
-        while getgenv().Infinitycastle == true do
-            getgenv().Infinitycastle = 0
+        spawn(function()
+            if game.PlaceId == 8304191830 then
+                task.wait()
+            while getgenv().Infinitycastle == true do
+                getgenv().Infinitycastle = 0
 
-            for i, v in pairs(game:GetService("Players")[game.Players.LocalPlayer.Name].PlayerGui.InfiniteTowerUI.LevelSelect.InfoFrame.LevelButtons:GetChildren()) do
-                if v.Name == "FloorButton" then
-                    if v.clear.Visible == false and v.Locked.Visible == false then
-                        local room = string.split(v.Main.text.Text, " ")
-                        getgenv().Infinitycastle = tonumber(room[2])
+                for i, v in pairs(game:GetService("Players")[game.Players.LocalPlayer.Name].PlayerGui.InfiniteTowerUI.LevelSelect.InfoFrame.LevelButtons:GetChildren()) do
+                    if v.Name == "FloorButton" then
+                        if v.clear.Visible == false and v.Locked.Visible == false then
+                            local room = string.split(v.Main.text.Text, " ")
+                            getgenv().Infinitycastle = tonumber(room[2])
+                        end
                     end
                 end
+                
+                task.wait(1.5)
+                local args = {
+                    [1] = getgenv().Infinitycastle
+                }
+                
+                game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower:InvokeServer(unpack(args))
+                task.wait(10)
             end
-            
-            task.wait(1.5)
-            local args = {
-                [1] = getgenv().Infinitycastle
-            }
-            
-            game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower:InvokeServer(unpack(args))
-            task.wait(10)
         end
     end)
 end
@@ -167,6 +181,7 @@ function Autonextroom()
                 task.wait(8)
                 local GameFinished = game:GetService("Workspace"):WaitForChild("_DATA"):WaitForChild("GameFinished")
                 if GameFinished.Value == true then
+                    task.wait(8)
                 game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
                 task.wait(5)
             end
@@ -180,8 +195,8 @@ function Autostartgame()
         spawn(function()
             while getgenv().Autostart == true do
                 task.wait(8)
-                local GameStarted = game:GetService("Workspace"):WaitForChild("_DATA"):WaitForChild("GameStarted")
-                if GameStarted.Value == true then
+                local StartTime = game:GetService("Workspace"):WaitForChild("_DATA"):WaitForChild("VoteStart"):WaitForChild("StartTime")
+                if StartTime.Value == true then
                 game:GetService("ReplicatedStorage").endpoints.client_to_server.vote_start:InvokeServer()
             end
         end
@@ -216,13 +231,13 @@ end
 
 -- Taps
 
-local RaidTab = Window:CreateTab("Auto Farm", 4483362458) -- Title, Image
+local RaidTab = Window:CreateTab("Auto Farm", 9875762755) -- Title, Image
 
-local CraftTab = Window:CreateTab("Auto Craft", 4483362458) -- Title, Image
+local CraftTab = Window:CreateTab("Auto Craft", 10481692479) -- Title, Image
 
-local InfCastle = Window:CreateTab("Inf Castle", 4483362458) -- Title, Image
+local InfCastle = Window:CreateTab("Inf Castle", 8524247446) -- Title, Image
 
-local Settings = Window:CreateTab("Game Settings", 4483362458) -- Title, Image
+local Settings = Window:CreateTab("Game Settings", 10071915254) -- Title, Image
 
 
 
@@ -432,7 +447,6 @@ end)
 
 
 -- Buy Toggles
-
 
 
 
