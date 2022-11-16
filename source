@@ -81,8 +81,9 @@ end
 function Autouseerwin()
     spawn(function()
         while getgenv().Autoerwin == true do
-            game:GetService("ReplicatedStorage").endpoints.client_to_server.use_active_attack:InvokeServer(workspace._UNITS.erwin)
-            wait(5)
+            while wait() do
+                game:GetService("ReplicatedStorage").endpoints.client_to_server.use_active_attack:InvokeServer(workspace._UNITS.erwin)
+             end
         end
     end)
 end
@@ -92,8 +93,9 @@ end
 function Autoskillgojo()
     spawn(function()
         while getgenv().Autogojo == true do
-            game:GetService("ReplicatedStorage").endpoints.client_to_server.use_active_attack:InvokeServer(workspace._UNITS.gojo_evolved)
-            wait(5)
+            while wait() do
+                game:GetService("ReplicatedStorage").endpoints.client_to_server.use_active_attack:InvokeServer(workspace._UNITS.gojo_evolved)
+             end
         end
     end)
 end
