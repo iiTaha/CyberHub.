@@ -42,6 +42,8 @@ getgenv().Autoparade = true
 getgenv().Autothriller = true
 getgenv().Autoerwin = true
 getgenv().Autogojo = true
+getgenv().Autostart = true
+
 
 
 
@@ -152,7 +154,7 @@ function Autoinfcastle()
             }
             
             game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower:InvokeServer(unpack(args))
-            task.wait(5)
+            task.wait(10)
         end
     end)
 end
@@ -166,6 +168,21 @@ function Autonextroom()
                 local GameFinished = game:GetService("Workspace"):WaitForChild("_DATA"):WaitForChild("GameFinished")
                 if GameFinished.Value == true then
                 game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
+                task.wait(5)
+            end
+        end
+    end)
+end
+
+-- auto start
+
+function Autostartgame()
+        spawn(function()
+            while getgenv().Autostart == true do
+                task.wait(8)
+                local GameStarted = game:GetService("Workspace"):WaitForChild("_DATA"):WaitForChild("GameStarted")
+                if GameStarted.Value == true then
+                game:GetService("ReplicatedStorage").endpoints.client_to_server.vote_start:InvokeServer()
             end
         end
     end)
@@ -205,6 +222,9 @@ local CraftTab = Window:CreateTab("Auto Craft", 4483362458) -- Title, Image
 
 local InfCastle = Window:CreateTab("Inf Castle", 4483362458) -- Title, Image
 
+local Settings = Window:CreateTab("Game Settings", 4483362458) -- Title, Image
+
+
 
 
 
@@ -219,6 +239,9 @@ local Section = RaidTab:CreateSection("AutoFarm")
 local Section = CraftTab:CreateSection("AutoCraft")
 
 local Section = InfCastle:CreateSection("AutoInfCastle")
+
+local Section = Settings:CreateSection("Settings")
+
 
 
 
@@ -236,6 +259,19 @@ local Button = RaidTab:CreateButton({
         end        
 	end,
 })
+
+-- Auto start game
+
+local Toggle = Settings:CreateToggle({
+    Name = "Auto Start",
+    CurrentValue = false,
+    Flag = "Autostart", 
+    Callback = function(Value)
+        getgenv().Autostart = Value
+        Autostartgame()
+    end
+})
+
 
 -- Erwin Buff Toggles
 
