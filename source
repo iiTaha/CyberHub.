@@ -37,6 +37,16 @@ getgenv().Ignotscraft = true
 getgenv().Infinitycastle = true
 getgenv().Nextroom = true
 getgenv().Autoleave = true
+getgenv().Autowomb = true
+getgenv().Autoparade = true
+getgenv().Autothriller = true
+getgenv().Autoerwin = true
+getgenv().Autogojo = true
+
+
+
+
+
 
 
 
@@ -60,9 +70,60 @@ end
 
 function Autoignotscraft()
     spawn(function()
-        while getgenv().Ignotscraft == true do
-            game:GetService("ReplicatedStorage").endpoints.client_to_server.craft_item:InvokeServer("ingots_steel","craft_relics_ui")
-            wait(0.5)
+        while getgenv().Autoparade == true do
+            game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer("_lobbytemplate_event28",{["selected_key"] = "key_jjk_map"})
+        end
+    end)
+end
+
+-- ErwinBuff Functions
+
+function Autouseerwin()
+    spawn(function()
+        while getgenv().Autoerwin == true do
+            game:GetService("ReplicatedStorage").endpoints.client_to_server.use_active_attack:InvokeServer(workspace._UNITS.erwin)
+            wait(5)
+        end
+    end)
+end
+
+-- GojoSkill Functions
+
+function Autoskillgojo()
+    spawn(function()
+        while getgenv().Autogojo == true do
+            game:GetService("ReplicatedStorage").endpoints.client_to_server.use_active_attack:InvokeServer(workspace._UNITS.gojo_evolved)
+            wait(5)
+        end
+    end)
+end
+
+-- Thriller Functions
+
+function Autojointhriller()
+    spawn(function()
+        while getgenv().Autothriller == true do
+            game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer("_lobbytemplate_event330")
+        end
+    end)
+end
+
+-- Womb Functions
+
+function Autojoinwomb()
+    spawn(function()
+        while getgenv().Autowomb == true do
+             game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer("_lobbytemplate_event229",{["selected_key"] = "key_jjk_finger"})
+        end
+    end)
+end
+
+-- Parade Functions
+
+function Autojoinparade()
+    spawn(function()
+        while getgenv().Autoparade == true do
+             game:GetService("ReplicatedStorage").endpoints.client_to_server.request_join_lobby:InvokeServer("_lobbytemplate_event229",{["selected_key"] = "key_jjk_finger"})
         end
     end)
 end
@@ -89,7 +150,7 @@ function Autoinfcastle()
             }
             
             game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower:InvokeServer(unpack(args))
-            task.wait(6)
+            task.wait(5)
         end
     end)
 end
@@ -99,9 +160,9 @@ end
 function Autonextroom()
     spawn(function()
         while getgenv().Nextroom == true do
-            wait(800)
+            local GameFinished = game:GetService("Workspace"):WaitForChild("_DATA"):WaitForChild("GameFinished")
+            if GameFinished.Value = true then
             game:GetService("ReplicatedStorage").endpoints.client_to_server.request_start_infinite_tower_from_game:InvokeServer()
-            wait(800)
         end
     end)
 end
@@ -111,6 +172,7 @@ end
 function Autoleavegame()
     spawn(function()
         while getgenv().Autoleave == true do
+            task.wait()
             coroutine.resume(coroutine.create(function()
                 local GameFinished = game:GetService("Workspace"):WaitForChild("_DATA"):WaitForChild("GameFinished")
                 GameFinished:GetPropertyChangedSignal("Value"):Connect(function()
@@ -133,7 +195,7 @@ end
 
 -- Taps
 
-local RaidTab = Window:CreateTab("Auto Raid", 4483362458) -- Title, Image
+local RaidTab = Window:CreateTab("Auto Farm", 4483362458) -- Title, Image
 
 local CraftTab = Window:CreateTab("Auto Craft", 4483362458) -- Title, Image
 
@@ -148,7 +210,7 @@ local InfCastle = Window:CreateTab("Inf Castle", 4483362458) -- Title, Image
 
 -- Sections 
 
-local Section = RaidTab:CreateSection("AutoRaids")
+local Section = RaidTab:CreateSection("AutoFarm")
 
 local Section = CraftTab:CreateSection("AutoCraft")
 
@@ -171,6 +233,30 @@ local Button = RaidTab:CreateButton({
 	end,
 })
 
+-- Erwin Buff Toggles
+
+local Toggle = RaidTab:CreateToggle({
+    Name = "Auto Erwin Buff",
+    CurrentValue = false,
+    Flag = "Autoerwin", 
+    Callback = function(Value)
+        getgenv().Autoerwin = Value
+        Autouseerwin()
+    end
+})
+
+-- Gojo Skill Toggles
+
+local Toggle = RaidTab:CreateToggle({
+    Name = "Auto Gojo Skill",
+    CurrentValue = false,
+    Flag = "Autogojo", 
+    Callback = function(Value)
+        getgenv().Autogojo = Value
+        Autoskillgojo()
+    end
+})
+
 -- Raid Toggles
 
 local Toggle = RaidTab:CreateToggle({
@@ -180,6 +266,42 @@ local Toggle = RaidTab:CreateToggle({
     Callback = function(Value)
         getgenv().Westraid = Value
         Autowestraid()
+    end
+})
+
+-- Auto womb Toggles
+
+local Toggle = RaidTab:CreateToggle({
+    Name = "Auto Join Cursed Womb",
+    CurrentValue = false,
+    Flag = "Auto Womb", 
+    Callback = function(Value)
+        getgenv().Autowomb = Value
+        Autojoinwomb()
+    end
+})
+
+-- Auto parade Toggles
+
+local Toggle = RaidTab:CreateToggle({
+    Name = "Auto Join Cursed Parade",
+    CurrentValue = false,
+    Flag = "Auto parade", 
+    Callback = function(Value)
+        getgenv().Autoparade = Value
+        Autojoinparade()
+    end
+})
+
+-- Auto Thriller Toggles
+
+local Toggle = RaidTab:CreateToggle({
+    Name = "Auto Join Thriller Park",
+    CurrentValue = false,
+    Flag = "Auto Thriller", 
+    Callback = function(Value)
+        getgenv().Autothriller = Value
+        Autojointhriller()
     end
 })
 
@@ -231,6 +353,40 @@ local Toggle = InfCastle:CreateToggle({
         Autoleavegame()
     end
 })
+
+
+
+
+
+
+--hide name
+
+task.spawn(function()  -- Hides name for yters (not sure if its Fe)
+    while task.wait() do
+        pcall(function()
+            if game.Players.LocalPlayer.Character.Head:FindFirstChild("_overhead") then
+               workspace[game.Players.LocalPlayer.Name].Head["_overhead"]:Destroy()
+            end
+        end)
+    end
+end)
+
+--anti afk
+
+pcall(function()
+    local vu = game:GetService("VirtualUser")
+    game:GetService("Players").LocalPlayer.Idled:connect(function()
+    vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    wait(1)
+    vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    end)
+end)
+
+
+
+
+
+
 
 
 
